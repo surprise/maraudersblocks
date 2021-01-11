@@ -1,0 +1,27 @@
+# You don't usually need to edit this file.
+# If it does not fit your personal use case, docker-compose.override.yml is a preferred way to go.
+
+version: '3'
+services:
+  mongo:
+    image: mongo:4
+    container_name: maraudersblocks-mongo
+  core:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      image: maraudersblocks
+      # Override this command with your script if existing does not fit your needs
+      entrypoint: bash docker/main-launch.sh
+      ports:
+        - "5000:5000"
+        - "5100:5100"
+      environment:
+        MONGODB_URL: mongodb://maraudersblocks-mongo/maraudersblocks
+      env_file:
+        - .env
+      volumes:
+        - .:/usr/src
+      links:
+        - mongo
+      container_name: maraudersblocks
